@@ -38,13 +38,27 @@ class PostForm
                             ->schema([
                                 TextInput::make('title')
                                     ->required()
-                                    ->minLength(5),
+                                    ->minLength(5)
+                                    ->validationMessages([
+                                        'required' => 'Title wajib diisi.',
+                                        'min' => 'Title minimal 5 karakter.',
+                                    ]),
                                 TextInput::make('slug')
                                     ->required()
-                                    ->unique(ignoreRecord: true),
+                                    ->minLength(3)
+                                    ->unique(ignoreRecord: true)
+                                    ->validationMessages([
+                                        'required' => 'Slug wajib diisi.',
+                                        'min' => 'Slug minimal 3 karakter.',
+                                        'unique' => 'Slug harus unik dan tidak boleh sama.',
+                                    ]),
                                 Select::make('category_id')
                                     ->label('Category')
                                     ->relationship('category', 'name')
+                                    ->required()
+                                    ->validationMessages([
+                                        'required' => 'Category wajib dipilih.',
+                                    ])
                                     ->preload()
                                     ->searchable(),
                                 ColorPicker::make('color'),
@@ -58,9 +72,15 @@ class PostForm
                             Section::make('Image Upload')
                                 ->icon('heroicon-o-photo')
                                 ->compact()
+                                ->columnSpanFull()
+                                ->columns(1)
                                 ->schema([
                                     FileUpload::make('image')
                                         ->image()
+                                        ->required()
+                                        ->validationMessages([
+                                            'required' => 'Image wajib diupload.',
+                                        ])
                                         ->disk('public')
                                         ->directory('posts'),
                                 ]),
@@ -68,7 +88,7 @@ class PostForm
                             Section::make('Meta Information')
                                 ->icon('heroicon-o-tag')
                                 ->compact()
-                                ->columns(2)
+                                ->columnSpanFull()
                                 ->schema([
                                     TagsInput::make('tags'),
                                     Toggle::make('published'),

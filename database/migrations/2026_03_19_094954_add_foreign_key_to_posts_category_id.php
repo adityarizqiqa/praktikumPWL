@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::getConnection()->getDriverName() === 'sqlite') {
+            return;
+        }
+
         DB::statement('ALTER TABLE posts MODIFY category_id BIGINT UNSIGNED NOT NULL');
 
         Schema::table('posts', function (Blueprint $table) {
@@ -28,6 +32,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (Schema::getConnection()->getDriverName() === 'sqlite') {
+            return;
+        }
+
         Schema::table('posts', function (Blueprint $table) {
             $table->dropForeign('posts_category_id_foreign');
         });
